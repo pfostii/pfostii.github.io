@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            background-color: #fdfdfd;
+            color: #222;
+        }
+        h1, h2 {
+            color: #b30000;
+        }
+        blockquote {
+            background: #f9f9f9;
+            border-left: 5px solid #ccc;
+            margin: 1em 0;
+            padding: 0.5em 1em;
+        }
+    </style>
+</head>
+<body>
+    <h2>Login</h2>
+    <input id="user" placeholder="Benutzername"><br>
+    <input id="pass" type="password" placeholder="Passwort"><br>
+    <button onclick="check()">Anmelden</button>
+    <div id="ergebnis"></div>
+
+    <script src="source.js"></script>
+    <script>
+        let check_login;
+
+        const blogText = `
+    <h1>Ein Sommer voller Ungerechtigkeit</h1>
+    <h2>Wie JunglehrerInnen um ihr Gehalt betrogen werden</h2>
+
+    <p>Stellen wir uns folgende Szene vor: Eine engagierte JunglehrerIn arbeitet sich das gesamte Schuljahr über den Rücken krumm. 
+    Von September bis Juni steht er/sie pünktlich vor der Klasse, hält Unterricht, übernimmt Supplierstunden, springt für kranke KollegInnen ein, 
+    bereitet Prüfungen vor und trägt mit vollem Einsatz zum Bildungsauftrag der Schule bei.</p>
+
+    <p>Doch kurz vor Schulschluss, im Juni, geschieht das Unfassbare: Eine KollegIn kehrt aus der Karenz zurück – völlig legitim natürlich. 
+    Aber anstatt einer fairen Lösung kommt es zum Systembruch: Der JunglehrerIn verliert in den letzten Wochen vor Ferienbeginn plötzlich ihre/seine Stunden. 
+    Und das hat fatale Folgen.</p>
+
+    <blockquote>Denn was viele nicht wissen: <strong>Die Gehaltsfortzahlung für die Sommermonate Juli und August wird in Österreich 
+    auf Basis der Stundenanzahl im Juni berechnet</strong>. Wer da keine oder kaum Stunden hat – fällt durch den Rost.</blockquote>
+
+    <p>Sprich: Der/die JunglehrerIn, der/die das ganze Jahr lang da war, steht plötzlich <strong>ohne Fortzahlung da</strong>. 
+    Und die KollegIn, die das ganze Jahr über in Babypause war, bekommt die Fortzahlung <em>auf Basis der paar Stunden</em>, 
+    die sie im Juni wieder aufnimmt.</p>
+
+    <p>Und der/die DirektorIn? <strong>Kann nichts tun.</strong> Hände gebunden. Vorschrift ist Vorschrift.</p>
+
+    <h2>Wo bleibt hier bitte die Gerechtigkeit?</h2>
+
+    <p>Wir reden in Österreich ständig von der Wertschätzung für LehrerInnen. Aber wenn es ums Geld geht, zeigt sich einmal mehr, 
+    wie wenig diese Wertschätzung zählt – zumindest für jene ohne sicheren Vertrag. JunglehrerInnen werden verheizt – und im entscheidenden Moment fallen gelassen.</p>
+
+    <p>Das ist kein kleiner Schönheitsfehler im System. Das ist strukturelle Ungleichheit, gesetzlich gedeckt. Ein System, das erlaubt, 
+    dass Menschen für ihre volle Jahresleistung <strong>null Kompensation im Sommer erhalten</strong>, während andere, die faktisch gar nicht gearbeitet haben, 
+    voll bezahlt werden – das ist nicht nur unsauber, das ist ein Skandal.</p>
+
+    <h2>Es ist höchste Zeit, dass sich etwas ändert.</h2>
+
+    <p>Wer sich wirklich für Bildung, Fairness und Nachwuchsförderung stark machen will, darf solche Lücken im Gesetz nicht länger ignorieren. 
+    Sonst bleibt das Vertrauen in den Beruf auf der Strecke – und mit ihm eine ganze Generation engagierter LehrerInnen.</p>
+
+    <hr>
+
+    <h2>⚖️ Juristische Einschätzung</h2>
+
+    <h3>Ist das rechtlich zulässig?</h3>
+    <p>So <strong>ungerecht</strong> es erscheint – ja, <strong>es ist derzeit rechtlich zulässig</strong>. Die Sommerfortzahlung für LehrerInnen ohne unbefristeten Vertrag 
+    richtet sich nach dem Beschäftigungsausmaß im Juni. Die Rückkehr aus Karenz ist arbeitsrechtlich geschützt. 
+    Der/die karenzierte LehrerIn hat ein <strong>Recht auf Rückkehr</strong> in das alte Stundenausmaß, was andere – meist befristete – LehrerInnen verdrängen kann.</p>
+
+    <h3>Wer trägt die Verantwortung?</h3>
+    <ul>
+        <li><strong>Nicht die Direktion</strong> – gesetzlich gebunden.</li>
+        <li><strong>Der Gesetzgeber</strong> – das Bildungsministerium ist zuständig für das Vertragsrecht.</li>
+        <li><strong>Personalvertretung & Bildungsdirektion</strong> – könnten Änderungen fordern oder unterstützen.</li>
+    </ul>
+
+    <h3>Was müsste geändert werden?</h3>
+    <ul>
+        <li>Berechnungsgrundlage: <strong>gesamtes Schuljahr</strong>, nicht nur Juni.</li>
+        <li>Absicherung von LehrerInnen mit durchgehender Jahresanstellung.</li>
+        <li>Karenzrückkehr: besser koordinieren, ohne andere zu benachteiligen.</li>
+        <li>Einführung fairer Mindestfortzahlungsregelungen.</li>
+    </ul>
+
+    <p><strong>Fazit:</strong> Die Situation ist rechtlich erlaubt, aber moralisch bedenklich – und politisch dringend reformbedürftig.</p>
+`;
+
+
+        Module.onRuntimeInitialized = function () {
+            console.log("WebAssembly bereit.");
+            check_login = Module.cwrap('check_login', 'number', ['string', 'string']);
+        };
+
+        function check() {
+            const user = document.getElementById("user").value;
+            const pass = document.getElementById("pass").value;
+
+            if (!check_login) {
+                console.error("WebAssembly ist noch nicht bereit.");
+                return;
+            }
+
+            const result = check_login(user, pass);
+            const output = document.getElementById("ergebnis");
+
+            if (result === 1) {
+                output.innerHTML = blogText;
+            } else {
+                output.textContent = "Kein Zugriff";
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
