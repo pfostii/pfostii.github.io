@@ -1,0 +1,3 @@
+//compiler command
+emcc source.c -s WASM=1 -s EXPORTED_FUNCTIONS='["_check_login"]' -s EXPORTED_RUNTIME_METHODS='["cwrap"]' -o source.js
+
