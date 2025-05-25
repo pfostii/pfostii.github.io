@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html>
-<head><title>C in Web</title></head>
+<head><meta charset="utf-8"><title>Login</title></head>
 <body>
+    <h2>Login</h2>
+    <input id="user" placeholder="Benutzername"><br>
+    <input id="pass" placeholder="Passwort" type="password"><br>
+    <button onclick="check()">Anmelden</button>
+    <p id="ergebnis"></p>
+
     <script src="source.js"></script>
     <script>
-        Module.onRuntimeInitialized = () => {
-            Module._main(); // ruft die main() auf
+        var check_login;
+
+        // Warte auf das Laden des WASM-Moduls
+        Module.onRuntimeInitialized = function() {
+            check_login = Module.cwrap('check_login', 'number', ['string', 'string']);
         };
+
+        function check() {
+            const user = document.getElementById("user").value;
+            const pass = document.getElementById("pass").value;
+            const result = check_login(user, pass);
+
+            document.getElementById("ergebnis").textContent =
+                result === 1 ? "Ja" : "Kein Zugriff";
+        }
     </script>
 </body>
 </html>
+
